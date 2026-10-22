@@ -1,5 +1,3 @@
-import { neon } from '@neondatabase/serverless';
-
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'Método não permitido' });
 
@@ -10,10 +8,10 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Preencha todos os campos.' });
     }
 
-    // Pega a string de conexão que você vai colar na Vercel
+    // Importa o Neon dinamicamente dentro da função
+    const { neon } = await import('@neondatabase/serverless');
     const sql = neon(process.env.DATABASE_URL);
 
-    // Insere os dados de forma simples e direta
     await sql`
       INSERT INTO clientes (nome, email, telefone)
       VALUES (${nome}, ${email}, ${telefone})
